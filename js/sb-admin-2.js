@@ -15,6 +15,7 @@
     if ($(window).width() < 768) {
       $('.sidebar .collapse').collapse('hide');
     };
+    
   });
 
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
