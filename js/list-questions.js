@@ -25,8 +25,7 @@ $.ajax({
   window.localStorage.setItem('questId', objecto.questionid);
   // $("#dataTable").dataTable('<tbody><tr><td>you scream</td><td>san francisscoo</td><td>San Francisco</td><td>59</td><td>2012/08/06</td><td>$137,500</td></tr></tbody>');
   const dataShow = objecto.map((item, i) => {
-    console.log(item.name);
-    return (data = [
+    return (
       {
         id: item.userid,
         hr: {
@@ -38,15 +37,15 @@ $.ajax({
             "-"
         },
         pregunta: [item.content, item.productid],
-        defaultContent: "<button>Click!</button>"
-       
+        defaultContent: `<button value=${item.questionid} id="btnAnswer" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Responder</button>`       
       }
-    ]);
+    );
   });
-
-  dataShow.map((item, i) => {
+  console.log(dataShow)
+  let answ = JSON.stringify(dataShow);
+  console.log(answ)
     $("#dataTablNueva").DataTable({
-      data: item,
+      data: dataShow,
       destroy: true,
       columns: [
         {
@@ -70,31 +69,58 @@ $.ajax({
           data: "hr.date"
         },
         {
-          defaultContent: '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Responder</button>'
+          data: "defaultContent"
         }
       ]
     });
   });
-});
+
+
+  //datatable onclick
+
+  var table = $('#dataTablNueva').DataTable();
+ 
+  $('#example').on( 'click', 'tr', function () {
+     console.log('clickeeeed' )
+  } );
+
+ 
+
 
 //Send andswer
+window.onload = function() {
+ 
+ prepareButton();
+
+};
+
+function prepareButton()
+{ 
+   document.getElementById('btnAnswer').onclick = function()
+   {
+       alert('you clicked me');
+   }
+}
+
+
 function postAnswer() {
   console.log(window.localStorage.getItem('questId'))
-  let datos = JSON.stringify({ "email":email, "password":password});
+  let txtAnsw = document.getElementById('txtAnswer').value;
+  
+  console.log(txtAnsw)
+  let datos = JSON.stringify({ "answer":txtAnsw});
   console.log('funCa')
   $.ajax({
     type: "POST",
-    url: "http://localhost:3001/api/login",
+    url: "http://localhost:3001/api/create_answer/",
     headers: {
       "Content-Type": "application/json"
     },
     data: datos
   }).always(function(data, textStatus, xhr) {
+      console.log(data)
+      alert(data.message);
       
-      if(data.users.message === "Your token"){
-        window.localStorage.setItem('acces_token', token);
-        window.location.href = 'index.html';
-      }
   });
 }
 
